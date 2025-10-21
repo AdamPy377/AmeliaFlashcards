@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 import { Card } from "../Types/Card";
 import { formatBoldText, cleanText } from "../utils/formatText";
-import { FaLongArrowAltDown } from "react-icons/fa";
 
 interface StudyViewProps {
 	localCards: Card[];
@@ -52,7 +51,6 @@ export default function StudyView({ localCards }: StudyViewProps) {
 							__html: formatBoldText(answer),
 						}}
 					/>
-					{/* <FaLongArrowAltDown /> */}
 					<div
 						style={{
 							fontWeight: "bold",
