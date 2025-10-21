@@ -1,38 +1,122 @@
+
 .App {
+  font-family: sans-serif;
   text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.studyCard {
+  margin: 20px auto;
+  padding: 40px;
+  border: 2px solid #333;
+  border-radius: 10px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 1.4rem;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background: #fae4e7;
+  overflow-wrap: break-word;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+button {
+  margin: 5px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #ffb6c1;
+  color: #333;
+  cursor: pointer;
+  font-weight: bolder;
+  
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+button:hover {
+  background: #ff9bb0;
+}
+
+.inputContainer, .cardList {
+  margin: 20px 0;
   display: flex;
   flex-direction: column;
+}
+
+.backInput, .frontInput, .explanationInput {
+  margin-bottom: 20px;
+  padding: 10px;
+  height: 40px;
+}
+
+.deleteBtn {
+  padding: 10px;
+  margin-left: 30px;
+  height: 35px;
+  width: 70px;
+  font-weight: bolder;
+}
+
+.editBtn {
+  padding: 10px;
+  margin-left: 30px;
+  height: 35px;
+  width: 70px;
+  font-weight: bolder;
+}
+
+.card {
+  border: black 3px solid;
+  border-radius: 10px;
+  position: relative;
+  height: 100px;
+  display: flex;
+  justify-content: space-evenly;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  margin-top: 20px;
+  padding: 20px;
+  max-width: 600px;
+  max-height: 150px;
+  background-color: #ffd7dd;
 }
 
-.App-link {
-  color: #61dafb;
+.card1 {
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;
+  overflow-x: hidden;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.actionBtns {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-left: auto;
+}
+
+.answerInput {
+  margin-top: 20px;
+  padding: 10px;
+  font-size: 1.2rem;
+  border: 2px solid #333;
+  border-radius: 6px;
+  width: 80%;
+}
+
+.answerInput.readonly {
+  opacity: 0;
+  cursor: not-allowed;
+}
+
+.boldBtn {
+  font-size: medium;
+  padding-right: 24px;
+  border: none;
+  border-radius: 10px;
+  background: #ffb6c1;
+  color: #333;
+  cursor: pointer;
+  max-width: 30px;
+  max-width: 30px;
+  margin-left: 30px;
 }
