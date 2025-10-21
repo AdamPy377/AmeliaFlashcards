@@ -52,7 +52,15 @@ export default function StudyView({ localCards }: StudyViewProps) {
 							__html: formatBoldText(answer),
 						}}
 					/>
-					<FaLongArrowAltDown />
+					{/* <FaLongArrowAltDown /> */}
+					<div
+						style={{
+							fontWeight: "bold",
+							fontSize: "30px",
+						}}
+					>
+						↓
+					</div>
 				</div>
 			)}
 
