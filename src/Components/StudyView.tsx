@@ -72,7 +72,7 @@ export default function StudyView({ localCards }: StudyViewProps) {
 					<img
 						src={current.frontImage}
 						alt="Front Preview"
-						width={200}
+						height={250}
 					/>
 				) : (
 					<div

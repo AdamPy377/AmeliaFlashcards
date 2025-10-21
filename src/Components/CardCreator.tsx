@@ -25,7 +25,7 @@ export default function CardCreator({ setLocalCards }: CardCreatorProps) {
 	};
 
 	const addCard = () => {
-		if (!front || !back) return;
+		if (!(front || frontImage) || !back) return;
 		const newCard: Card = {
 			id: Date.now(),
 			front,

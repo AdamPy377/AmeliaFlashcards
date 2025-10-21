@@ -18,12 +18,21 @@ export default function CardList({ localCards, setLocalCards }: CardListProps) {
 				{localCards.map((card) => (
 					<div key={card.id} className="card">
 						<div className="card1">
-							<strong
-								style={{ paddingBottom: "10px" }}
-								dangerouslySetInnerHTML={{
-									__html: formatBoldText(card.front),
-								}}
-							></strong>
+							{card.front && (
+								<strong
+									style={{ paddingBottom: "10px" }}
+									dangerouslySetInnerHTML={{
+										__html: formatBoldText(card.front),
+									}}
+								></strong>
+							)}
+							{card.frontImage && (
+								<img
+									src={card.frontImage}
+									alt="Front Preview"
+									height={40}
+								/>
+							)}
 							<p
 								dangerouslySetInnerHTML={{
 									__html: formatBoldText(card.back),
