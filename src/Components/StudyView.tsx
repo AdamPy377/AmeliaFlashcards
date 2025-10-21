@@ -61,15 +61,37 @@ export default function StudyView({ localCards }: StudyViewProps) {
 					</div>
 				</div>
 			)}
-
-			<div
-				className="studyCard"
-				dangerouslySetInnerHTML={{
-					__html: formatBoldText(
-						showBack ? current.back : current.front
-					),
-				}}
-			/>
+			<div className="studyCard">
+				{showBack ? (
+					<div
+						dangerouslySetInnerHTML={{
+							__html: formatBoldText(current.back),
+						}}
+					/>
+				) : current.frontImage ? (
+					<img
+						src={current.frontImage}
+						alt="Front Preview"
+						width={200}
+					/>
+				) : (
+					<div
+						dangerouslySetInnerHTML={{
+							__html: formatBoldText(current.front),
+						}}
+					/>
+				)}
+			</div>
+			{/* {!current.frontImage && (
+				<div
+					className="studyCard"
+					dangerouslySetInnerHTML={{
+						__html: formatBoldText(
+							showBack ? current.back : current.front
+						),
+					}}
+				/>
+			)} */}
 			{
 				<input
 					type="text"

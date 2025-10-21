@@ -9,13 +9,34 @@ export default function CardCreator({ setLocalCards }: CardCreatorProps) {
 	const [front, setFront] = useState("");
 	const [back, setBack] = useState("");
 	const [explanation, setExplanation] = useState("");
+	const [frontImage, setFrontImage] = useState<string | undefined>();
+
+	const handleImageUpload = (
+		e: React.ChangeEvent<HTMLInputElement>,
+		setImage: React.Dispatch<React.SetStateAction<string | undefined>>
+	) => {
+		const file = e.target.files?.[0];
+		if (!file) return;
+		const reader = new FileReader();
+		reader.onloadend = () => {
+			setImage(reader.result as string);
+		};
+		reader.readAsDataURL(file);
+	};
 
 	const addCard = () => {
 		if (!front || !back) return;
-		const newCard: Card = { id: Date.now(), front, back, explanation };
+		const newCard: Card = {
+			id: Date.now(),
+			front,
+			frontImage,
+			back,
+			explanation,
+		};
 		setLocalCards((prev) => [...prev, newCard]);
 		setFront("");
 		setBack("");
+		setFrontImage(undefined);
 		setExplanation("");
 	};
 
@@ -30,6 +51,29 @@ export default function CardCreator({ setLocalCards }: CardCreatorProps) {
 					className="frontInput"
 					autoFocus
 				/>
+				<div className="imageUpload">
+					<div>
+						<label
+							style={{
+								fontSize: "14px",
+								opacity: 0.6,
+								marginRight: "10px",
+							}}
+						>
+							Front Image:
+						</label>
+						<input
+							type="file"
+							accept="image/*"
+							onChange={(e) =>
+								handleImageUpload(e, setFrontImage)
+							}
+						/>
+					</div>
+					{frontImage && (
+						<img src={frontImage} alt="Front Preview" width={40} />
+					)}
+				</div>
 				<input
 					placeholder="Back"
 					value={back}
