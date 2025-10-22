@@ -96,16 +96,21 @@ function App() {
 		const reader = new FileReader();
 		reader.onload = (event) => {
 			try {
-				const imported = JSON.parse(event.target?.result as string);
-				if (Array.isArray(imported)) {
-					setLocalDecks(imported);
-					setSelectedDeck(null);
-					setView("decks");
-					alert("Decks imported successfully!");
-				} else {
-					alert("Invalid deck format in imported file.");
-				}
+				const imported = JSON.parse(
+					event.target?.result as string
+				) as Deck[];
+				if (!Array.isArray(imported))
+					throw new Error("Imported data is not an array");
+				setLocalDecks((currentDecks) => {
+					const existingIds = new Set(currentDecks.map((d) => d.id));
+					const newDecks = imported.filter(
+						(d) => !existingIds.has(d.id)
+					);
+					return [...currentDecks, ...newDecks];
+				});
+				alert("Decks imported successfully!");
 			} catch (error) {
+				console.error(error);
 				alert("Error reading imported file.");
 			}
 		};
