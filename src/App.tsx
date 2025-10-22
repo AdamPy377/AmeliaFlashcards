@@ -6,15 +6,17 @@ import CardList from "./Components/CardList";
 import StudyView from "./Components/StudyView";
 import { Deck } from "./Types/Deck";
 import { cursorTo } from "readline";
+import { EditCard } from "./Components/EditCard";
 
 function App() {
 	// const [localCards, setLocalCards] = useState<Card[]>([]);
 	const [localDecks, setLocalDecks] = useState<Deck[]>([]);
 	const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null);
 	const [isInitialized, setIsInitialized] = useState(false); // Track initialization
-	const [view, setView] = useState<"create" | "list" | "study" | "decks">(
-		"decks"
-	);
+	const [view, setView] = useState<
+		"create" | "list" | "study" | "decks" | "edit"
+	>("decks");
+	const [cardToEdit, setCardToEdit] = useState<Card | null>(null);
 
 	// Initial load of cards from localStorage
 	useEffect(() => {
@@ -195,6 +197,8 @@ function App() {
 			)}
 			{view === "list" && currentDeck && (
 				<CardList
+					setCardToEdit={setCardToEdit}
+					setView={setView}
 					deckName={currentDeck.name}
 					localCards={currentDeck.cards}
 					setLocalCards={(newCards) => {
@@ -218,6 +222,14 @@ function App() {
 				<StudyView
 					deckName={currentDeck.name}
 					localCards={currentDeck.cards}
+				/>
+			)}
+			{view === "edit" && currentDeck && cardToEdit !== null && (
+				<EditCard
+					setLocalDecks={setLocalDecks}
+					setView={setView}
+					Deck={currentDeck}
+					cardToEdit={cardToEdit}
 				/>
 			)}
 		</div>

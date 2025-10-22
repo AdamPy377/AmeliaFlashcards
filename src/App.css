@@ -162,3 +162,9 @@ label {
 label:hover {
   background: #ff9bb0;
 }
+
+.frontImageStudy {
+  max-height: 250px;
+  max-width: 100%;
+  object-fit: contain;
+}

@@ -5,15 +5,25 @@ interface CardListProps {
 	localCards: Card[];
 	setLocalCards: React.Dispatch<React.SetStateAction<Card[]>>;
 	deckName?: string;
+	setCardToEdit?: React.Dispatch<React.SetStateAction<Card | null>>;
+	setView: React.Dispatch<
+		React.SetStateAction<"create" | "list" | "study" | "decks" | "edit">
+	>;
 }
 
 export default function CardList({
 	deckName,
 	localCards,
 	setLocalCards,
+	setCardToEdit,
+	setView,
 }: CardListProps) {
 	const deleteCard = (id: number) => {
 		setLocalCards((prev) => prev.filter((card) => card.id !== id));
+	};
+	const editCard = (card: Card) => {
+		setCardToEdit?.(card);
+		setView("edit");
 	};
 	return (
 		<div>
@@ -46,7 +56,9 @@ export default function CardList({
 						</div>
 						<div className="actionBtns">
 							<button
-								onClick={() => alert(`Edit card ${card.id}`)}
+								onClick={() => {
+									editCard(card);
+								}}
 								className="editBtn"
 							>
 								Edit

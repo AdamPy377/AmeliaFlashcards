@@ -85,7 +85,7 @@ export default function StudyView({ deckName, localCards }: StudyViewProps) {
 					<img
 						src={current.frontImage}
 						alt="Front Preview"
-						height={250}
+						className="frontImageStudy"
 					/>
 				) : (
 					<div
