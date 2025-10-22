@@ -13,9 +13,9 @@ export default function StudyView({ localCards }: StudyViewProps) {
 	const [answer, setAnswer] = useState("");
 	const [correctAnswer, setCorrectAnswer] = useState(false);
 
-	const inputRef = useRef<HTMLInputElement>(null);
+	const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		if (e.key === "Enter") {
 			// Handle answer submission
 			if (showBack) {
@@ -24,12 +24,23 @@ export default function StudyView({ localCards }: StudyViewProps) {
 				setShowExplanation(false);
 				setIndex((i) => (i + 1) % localCards.length);
 			} else {
-				setAnswer((e.target as HTMLInputElement).value);
+				const value = e.currentTarget.value;
+				setAnswer(value);
 				setShowBack(true);
-				(e.target as HTMLInputElement).value === cleanText(current.back)
+				value === cleanText(current.back)
 					? setCorrectAnswer(true)
 					: setCorrectAnswer(false);
 			}
+		}
+	};
+
+	const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+		setAnswer(e.target.value);
+
+		const el = textAreaRef.current;
+		if (el) {
+			el.style.height = "auto";
+			el.style.height = `${el.scrollHeight}px`;
 		}
 	};
 
@@ -92,12 +103,12 @@ export default function StudyView({ localCards }: StudyViewProps) {
 					}}
 				/>
 			)} */}
-			{
+			{/* {
 				<input
 					type="text"
 					id="answer"
 					className={`answerInput ${showBack ? "readonly" : ""}`}
-					autoFocus
+					// autoFocus
 					onKeyDown={handleKeyDown}
 					readOnly={showBack}
 					ref={inputRef}
@@ -105,14 +116,24 @@ export default function StudyView({ localCards }: StudyViewProps) {
 					onChange={(e) => setAnswer(e.target.value)}
 					placeholder="Answer"
 				/>
-			}
-
+			} */}
+			<textarea
+				id="answer"
+				className={`answerInput ${showBack ? "readonly" : ""}`}
+				autoFocus
+				onKeyDown={handleKeyDown}
+				readOnly={showBack}
+				ref={textAreaRef}
+				value={answer}
+				onChange={handleChange}
+				placeholder="Answer"
+			/>
 			{showBack && current.explanation && (
 				<div className="explanationSection">
 					<button
 						onClick={() => {
 							setShowExplanation((prev) => !prev);
-							inputRef.current?.focus();
+							textAreaRef.current?.focus();
 						}}
 						className="explanationBtn"
 					>

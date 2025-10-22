@@ -11,6 +11,25 @@ export default function CardCreator({ setLocalCards }: CardCreatorProps) {
 	const [explanation, setExplanation] = useState("");
 	const [frontImage, setFrontImage] = useState<string | undefined>();
 
+	const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+		const items = e.clipboardData.items;
+		for (let i = 0; i < items.length; i++) {
+			const item = items[i];
+			if (!item) continue;
+			if (item.type.startsWith("image/")) {
+				const file = item.getAsFile();
+				if (file) {
+					const reader = new FileReader();
+					reader.onload = (ev) => {
+						const base64 = ev.target?.result as string;
+						setFrontImage(base64);
+					};
+					reader.readAsDataURL(file);
+				}
+			}
+		}
+	};
+
 	const handleImageUpload = (
 		e: React.ChangeEvent<HTMLInputElement>,
 		setImage: React.Dispatch<React.SetStateAction<string | undefined>>
@@ -50,6 +69,7 @@ export default function CardCreator({ setLocalCards }: CardCreatorProps) {
 					onChange={(e) => setFront(e.target.value)}
 					className="frontInput"
 					autoFocus
+					onPaste={handlePaste}
 				/>
 				<div className="imageUpload">
 					<div>
