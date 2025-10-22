@@ -4,15 +4,20 @@ import { formatBoldText } from "../utils/formatText";
 interface CardListProps {
 	localCards: Card[];
 	setLocalCards: React.Dispatch<React.SetStateAction<Card[]>>;
+	deckName?: string;
 }
 
-export default function CardList({ localCards, setLocalCards }: CardListProps) {
+export default function CardList({
+	deckName,
+	localCards,
+	setLocalCards,
+}: CardListProps) {
 	const deleteCard = (id: number) => {
 		setLocalCards((prev) => prev.filter((card) => card.id !== id));
 	};
 	return (
 		<div>
-			<h2>My Cards</h2>
+			<h2>{deckName ? deckName : "My Cards"}</h2>
 			{localCards.length === 0 && <p>No cards available. Create some!</p>}
 			<div className="cardList">
 				{localCards.map((card) => (

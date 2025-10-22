@@ -4,39 +4,34 @@ import { Card } from "./Types/Card";
 import CardCreator from "./Components/CardCreator";
 import CardList from "./Components/CardList";
 import StudyView from "./Components/StudyView";
+import { Deck } from "./Types/Deck";
 
 function App() {
-	const [localCards, setLocalCards] = useState<Card[]>([]);
+	// const [localCards, setLocalCards] = useState<Card[]>([]);
+	const [localDecks, setLocalDecks] = useState<Deck[]>([]);
+	const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null);
 	const [isInitialized, setIsInitialized] = useState(false); // Track initialization
-	const [view, setView] = useState<"create" | "list" | "study">("list");
+	const [view, setView] = useState<"create" | "list" | "study" | "decks">(
+		"list"
+	);
 
 	// Initial load of cards from localStorage
 	useEffect(() => {
-		const saved = localStorage.getItem("cards");
+		const saved = localStorage.getItem("decks");
 		console.log("Raw localStorage data:", saved);
 		console.log("JSON stringified saved:", JSON.stringify(saved));
 		if (saved) {
 			try {
-				const parsedCards = JSON.parse(saved);
-				console.log("Parsed cards:", parsedCards);
-				if (Array.isArray(parsedCards)) {
+				const parsedDecks = JSON.parse(saved);
+				console.log("Parsed decks:", parsedDecks);
+				if (Array.isArray(parsedDecks)) {
 					// Validate card structure
-					const validCards = parsedCards.filter(
-						(card) =>
-							card &&
-							typeof card.id === "number" &&
-							typeof card.front === "string" &&
-							typeof card.back === "string" &&
-							(typeof card.explanation === "string" ||
-								card.explanation === undefined)
-					);
-					console.log("Valid cards:", validCards);
-					setLocalCards(validCards);
+					setLocalDecks(parsedDecks);
 				} else {
-					console.error("Parsed data is not an array:", parsedCards);
+					console.error("Parsed data is not an array:", parsedDecks);
 				}
 			} catch (error) {
-				console.error("Error parsing localStorage cards:", error);
+				console.error("Error parsing localStorage decks:", error);
 			}
 		}
 		setIsInitialized(true); // Mark initialization complete
@@ -45,33 +40,131 @@ function App() {
 	// Update localStorage when localCards changes, after initialization
 	useEffect(() => {
 		if (isInitialized) {
-			console.log("Saving to localStorage:", localCards);
-			localStorage.setItem("cards", JSON.stringify(localCards));
+			console.log("Saving to localStorage:", localDecks);
+			localStorage.setItem("decks", JSON.stringify(localDecks));
 		} else {
 			console.log("Skipping save to localStorage: not initialized yet");
 		}
-	}, [localCards, isInitialized]);
+	}, [localDecks, isInitialized]);
+
+	const createDeck = () => {
+		const name = prompt("Enter deck name:");
+		if (!name) return;
+		const newDeck: Deck = { id: Date.now(), name, cards: [] };
+		setLocalDecks((prev) => [...prev, newDeck]);
+		setSelectedDeck(newDeck);
+		setView("list");
+	};
+
+	const addCardToDeck = (card: Card) => {
+		if (!selectedDeck) return;
+		setLocalDecks((prevDecks) =>
+			prevDecks.map((deck) =>
+				deck.id === selectedDeck.id
+					? { ...deck, cards: [...deck.cards, card] }
+					: deck
+			)
+		);
+	};
+
+	const deleteDeck = (deckId: number) => {
+		if (window.confirm("Are you sure you want to delete this deck?")) {
+			setLocalDecks((prev) => prev.filter((deck) => deck.id !== deckId));
+			if (selectedDeck?.id === deckId) {
+				setSelectedDeck(null);
+				setView("decks");
+			}
+		}
+	};
+
+	const currentDeck = selectedDeck
+		? localDecks.find((d) => d.id === selectedDeck.id)
+		: null;
 
 	// Log current state for debugging
-	console.log("Current localCards in render:", localCards);
+	console.log("Current localDecks in render:", localDecks);
 
 	return (
 		<div className="App">
 			<h1>Flashcards for My Love</h1>
 			<nav>
-				<button onClick={() => setView("list")}>My Cards</button>
-				<button onClick={() => setView("create")}>Create Card</button>
-				<button onClick={() => setView("study")}>Study</button>
+				<button onClick={() => setView("decks")}>My Decks</button>
+				{selectedDeck && (
+					<>
+						<button onClick={() => setView("list")}>
+							My Cards
+						</button>
+						<button onClick={() => setView("create")}>
+							Create Card
+						</button>
+						<button onClick={() => setView("study")}>Study</button>
+					</>
+				)}
 			</nav>
 
-			{view === "create" && <CardCreator setLocalCards={setLocalCards} />}
-			{view === "list" && (
-				<CardList
-					localCards={localCards}
-					setLocalCards={setLocalCards}
+			{view === "decks" && (
+				<div>
+					<h2>My Decks</h2>
+					<ul>
+						{localDecks.map((deck) => (
+							<li key={deck.id}>
+								<button
+									onClick={() => {
+										setSelectedDeck(deck);
+										setView("list");
+									}}
+								>
+									{deck.name}
+								</button>
+								<button onClick={() => deleteDeck(deck.id)}>
+									🗑️
+								</button>
+							</li>
+						))}
+					</ul>
+					<button onClick={createDeck}>New Deck</button>
+				</div>
+			)}
+
+			{view === "create" && currentDeck && (
+				<CardCreator
+					deckName={currentDeck.name}
+					setLocalCards={(updater) => {
+						const updated =
+							typeof updater === "function"
+								? updater(currentDeck.cards)
+								: updater;
+						addCardToDeck(updated[updated.length - 1]);
+					}}
 				/>
 			)}
-			{view === "study" && <StudyView localCards={localCards} />}
+			{view === "list" && currentDeck && (
+				<CardList
+					deckName={currentDeck.name}
+					localCards={currentDeck.cards}
+					setLocalCards={(newCards) => {
+						setLocalDecks((prevDecks) =>
+							prevDecks.map((deck) =>
+								deck.id === currentDeck.id
+									? {
+											...deck,
+											cards:
+												typeof newCards === "function"
+													? newCards(deck.cards)
+													: newCards,
+									  }
+									: deck
+							)
+						);
+					}}
+				/>
+			)}
+			{view === "study" && currentDeck && (
+				<StudyView
+					deckName={currentDeck.name}
+					localCards={currentDeck.cards}
+				/>
+			)}
 		</div>
 	);
 }

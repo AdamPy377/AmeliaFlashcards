@@ -130,3 +130,18 @@ button:hover {
   align-items: center;
   justify-content: space-between;
 }
+
+ul {
+  list-style-type: none;
+  margin-right: 40px;
+  width: 600px;
+  background-color: #ffd7dd;
+  border: solid 2px black;
+  padding: 10px;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

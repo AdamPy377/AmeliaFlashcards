@@ -3,9 +3,13 @@ import { Card } from "../Types/Card";
 
 interface CardCreatorProps {
 	setLocalCards: React.Dispatch<React.SetStateAction<Card[]>>;
+	deckName?: string;
 }
 
-export default function CardCreator({ setLocalCards }: CardCreatorProps) {
+export default function CardCreator({
+	setLocalCards,
+	deckName,
+}: CardCreatorProps) {
 	const [front, setFront] = useState("");
 	const [back, setBack] = useState("");
 	const [explanation, setExplanation] = useState("");
@@ -61,7 +65,7 @@ export default function CardCreator({ setLocalCards }: CardCreatorProps) {
 
 	return (
 		<div>
-			<h2>Create a Card!</h2>
+			<h2>{`Create a ${deckName} Card!`}</h2>
 			<div className="inputContainer">
 				<input
 					placeholder="Front"

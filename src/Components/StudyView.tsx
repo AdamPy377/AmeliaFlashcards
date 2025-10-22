@@ -4,9 +4,10 @@ import { formatBoldText, cleanText } from "../utils/formatText";
 
 interface StudyViewProps {
 	localCards: Card[];
+	deckName?: string;
 }
 
-export default function StudyView({ localCards }: StudyViewProps) {
+export default function StudyView({ deckName, localCards }: StudyViewProps) {
 	const [index, setIndex] = useState(0);
 	const [showBack, setShowBack] = useState(false);
 	const [showExplanation, setShowExplanation] = useState(false);
@@ -17,6 +18,7 @@ export default function StudyView({ localCards }: StudyViewProps) {
 
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		if (e.key === "Enter") {
+			e.preventDefault();
 			// Handle answer submission
 			if (showBack) {
 				setAnswer("");
@@ -53,7 +55,7 @@ export default function StudyView({ localCards }: StudyViewProps) {
 
 	return (
 		<div>
-			<h2>Study Flashcards</h2>
+			<h2>{deckName ? `Study - ${deckName}` : "Study Flashcards"}</h2>
 			{showBack && !correctAnswer && (
 				<div>
 					<div
@@ -117,17 +119,6 @@ export default function StudyView({ localCards }: StudyViewProps) {
 					placeholder="Answer"
 				/>
 			} */}
-			<textarea
-				id="answer"
-				className={`answerInput ${showBack ? "readonly" : ""}`}
-				autoFocus
-				onKeyDown={handleKeyDown}
-				readOnly={showBack}
-				ref={textAreaRef}
-				value={answer}
-				onChange={handleChange}
-				placeholder="Answer"
-			/>
 			{showBack && current.explanation && (
 				<div className="explanationSection">
 					<button
@@ -154,7 +145,17 @@ export default function StudyView({ localCards }: StudyViewProps) {
 					)}
 				</div>
 			)}
-
+			<textarea
+				id="answer"
+				className={`answerInput ${showBack ? "readonly" : ""}`}
+				autoFocus
+				onKeyDown={handleKeyDown}
+				readOnly={showBack}
+				ref={textAreaRef}
+				value={answer}
+				onChange={handleChange}
+				placeholder="Answer"
+			/>
 			{/* {false && (
 				<div>
 					<button
