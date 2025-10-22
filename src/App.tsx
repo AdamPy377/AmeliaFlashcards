@@ -141,6 +141,11 @@ function App() {
 				<div>
 					<h2>My Decks</h2>
 					<ul>
+						{localDecks.length === 0 && (
+							<p style={{ fontWeight: "bold" }}>
+								No decks available. Create one!
+							</p>
+						)}
 						{localDecks.map((deck) => (
 							<li key={deck.id}>
 								<button

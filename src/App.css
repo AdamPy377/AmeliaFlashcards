@@ -138,6 +138,7 @@ ul {
   background-color: #ffd7dd;
   border: solid 2px black;
   padding: 10px;
+  min-height: 150px;
 }
 
 li {
