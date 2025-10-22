@@ -145,3 +145,19 @@ li {
   align-items: center;
   justify-content: space-between;
 }
+
+label {
+  margin: 5px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #ffb6c1;
+  color: #333;
+  cursor: pointer;
+  font-weight: bolder;
+  
+}
+
+label:hover {
+  background: #ff9bb0;
+}

@@ -5,6 +5,7 @@ import CardCreator from "./Components/CardCreator";
 import CardList from "./Components/CardList";
 import StudyView from "./Components/StudyView";
 import { Deck } from "./Types/Deck";
+import { cursorTo } from "readline";
 
 function App() {
 	// const [localCards, setLocalCards] = useState<Card[]>([]);
@@ -12,7 +13,7 @@ function App() {
 	const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null);
 	const [isInitialized, setIsInitialized] = useState(false); // Track initialization
 	const [view, setView] = useState<"create" | "list" | "study" | "decks">(
-		"list"
+		"decks"
 	);
 
 	// Initial load of cards from localStorage
@@ -77,6 +78,40 @@ function App() {
 		}
 	};
 
+	const saveDecks = () => {
+		const blob = new Blob([JSON.stringify(localDecks, null, 2)], {
+			type: "application/json",
+		});
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = "1_flashcard_decks.json";
+		a.click();
+		URL.revokeObjectURL(url);
+	};
+
+	const loadDecks = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (!file) return;
+		const reader = new FileReader();
+		reader.onload = (event) => {
+			try {
+				const imported = JSON.parse(event.target?.result as string);
+				if (Array.isArray(imported)) {
+					setLocalDecks(imported);
+					setSelectedDeck(null);
+					setView("decks");
+					alert("Decks imported successfully!");
+				} else {
+					alert("Invalid deck format in imported file.");
+				}
+			} catch (error) {
+				alert("Error reading imported file.");
+			}
+		};
+		reader.readAsText(file);
+	};
+
 	const currentDeck = selectedDeck
 		? localDecks.find((d) => d.id === selectedDeck.id)
 		: null;
@@ -122,7 +157,17 @@ function App() {
 							</li>
 						))}
 					</ul>
+					<button onClick={saveDecks}>Save Decks</button>
 					<button onClick={createDeck}>New Deck</button>
+					<label style={{ cursor: "pointer", fontSize: "14px" }}>
+						Upload Decks
+						<input
+							type="file"
+							accept=".json"
+							onChange={loadDecks}
+							style={{ display: "none" }}
+						/>
+					</label>
 				</div>
 			)}
 

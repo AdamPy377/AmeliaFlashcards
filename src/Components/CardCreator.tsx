@@ -82,17 +82,19 @@ export default function CardCreator({
 								fontSize: "14px",
 								opacity: 0.6,
 								marginRight: "10px",
+								backgroundColor: "#f0f0f0",
 							}}
 						>
 							Front Image:
+							<input
+								type="file"
+								accept="image/*"
+								onChange={(e) =>
+									handleImageUpload(e, setFrontImage)
+								}
+								style={{ display: "none" }}
+							/>
 						</label>
-						<input
-							type="file"
-							accept="image/*"
-							onChange={(e) =>
-								handleImageUpload(e, setFrontImage)
-							}
-						/>
 					</div>
 					{frontImage && (
 						<img src={frontImage} alt="Front Preview" width={40} />
